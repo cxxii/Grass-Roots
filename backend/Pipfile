@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-sqlalchemy = "*"
+psycopg2 = "*"
+python-dotenv = "*"
+flask-cors = "*"
+flask-bcrypt = "*"
+flask-caching = "*"
+flask-debugtoolbar = "*"
+flask-login = "*"
+flask-static-digest = "*"
+flask-wtf = "*"
+flask-migrate = "*"
+pyjwt = "*"
+flask-redis = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
