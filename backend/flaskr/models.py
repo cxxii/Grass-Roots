@@ -77,7 +77,7 @@ class Player(db.Model):
     number = db.Column(db.Integer, nullable=True)
     teams = db.relationship('Team', secondary=player_team, backref='players')
 
-    # WEB
+    # DB
     created_at = db.Column(
         db.DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)
     )
@@ -94,16 +94,15 @@ class Team(db.Model):
 
     # SPORT
     sport = db.Column(db.String(40), nullable=False)
-    team_name = db.Column(db.String(40), nullable=False)
-    badge = db.Column(db.String(255), nullable=False, default='3bc4d796a1564c70a5704ea63347efcb')
+    name = db.Column(db.String(40), nullable=False)
+    badge = db.Column(db.String(255), nullable=False, default='4a6d9d8630324477b3d9cd6eac485b2c')
     league_id = db.Column(db.Integer, db.ForeignKey("leagues.id"), nullable=True)
     players = relationship("Player", backref="team", lazy=True)
 
-    # Web
+    # DB
     created_at = db.Column(
         db.DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)
     )
-
 
     def __repr__(self):
         return f"<Team(sport='{self.sport}', team_name='{self.team_name}')>"
@@ -113,16 +112,18 @@ class League(db.Model):
     __tablename__ = "leagues"
 
     id = db.Column(db.Integer, primary_key=True)
-    league_name = db.Column(db.String(100), nullable=False, unique=True)
-    league_sport = db.Column(db.String(40), nullable=False)
+
+    # SPORT
+    name = db.Column(db.String(100), nullable=False, unique=True)
+    sport = db.Column(db.String(40), nullable=False)
     location = db.Column(db.String(40), nullable=False)
+    teams = relationship("Team", backref="league", lazy=True)
+    logo = db.Column(db.String(255), nullable=False, default='dd2b0f0f465e4931b784ce9066cc5973')
+
+    # DB
     created_at = db.Column(
         db.DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)
     )
-
-    # league logo
-
-    teams = relationship("Team", backref="league", lazy=True)
 
     def __repr__(self):
         return f"<League(league_name='{self.league_name}', league_sport='{self.league_sport}', location='{self.location}')>"
