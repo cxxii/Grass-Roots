@@ -3,7 +3,8 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from extensions import bcrypt, db
 
-# ! CONFLICTS IN DB :( backref 
+# ! CONFLICTS IN DB :( backref
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -26,7 +27,8 @@ class User(db.Model):
     created_at = db.Column(
         db.DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)
     )
-    
+    reg_token = db.Column(db.String(255), nullable=True)
+
     # LOGIC
     league_admin = db.Column(db.Boolean(), default=False, server_default="false")
     team_admin = db.Column(db.Boolean(), default=False, server_default="false")
@@ -82,7 +84,7 @@ class Player(db.Model):
     number = db.Column(db.Integer, nullable=True)
     teams = db.relationship("Team", secondary=player_team, backref="playing_for")
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user = db.relationship("User", back_populates="player_of")
 
     # DB
@@ -108,10 +110,12 @@ class Team(db.Model):
     league_id = db.Column(db.Integer, db.ForeignKey("leagues.id"), nullable=True)
 
     # M2M
-    player_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    player_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     #  foreign_keys=[player_id] below
-    players = relationship("Player", secondary=player_team, backref="teams_of", lazy=True)
+    players = relationship(
+        "Player", secondary=player_team, backref="teams_of", lazy=True
+    )
 
     # DB
     created_at = db.Column(
