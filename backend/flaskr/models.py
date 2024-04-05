@@ -31,7 +31,7 @@ class User(db.Model):
     team_admin = db.Column(db.Boolean(), default=False, server_default="false")
 
     # RELATIONSHIPS
-    player = db.relationship('players', backref='users', lazy=True)
+    player = db.relationship("players", backref="users", lazy=True)
 
     @hybrid_property
     def password(self):
@@ -57,9 +57,11 @@ class User(db.Model):
         return f"<User({self.username!r})>"
 
 
-player_team = db.Table('player_team',
-                       db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
-                       db.Column('team_id', db.Interger, db.ForeignKey('team.id')))
+player_team = db.Table(
+    "player_team",
+    db.Column("player_id", db.Integer, db.ForeignKey("player.id")),
+    db.Column("team_id", db.Interger, db.ForeignKey("team.id")),
+)
 
 
 class Player(db.Model):
@@ -70,12 +72,14 @@ class Player(db.Model):
     # PERSONAL
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
-    display_pic = db.Column(db.String(255), nullable=False, default='3bc4d796a1564c70a5704ea63347efcb')
+    display_pic = db.Column(
+        db.String(255), nullable=False, default="3bc4d796a1564c70a5704ea63347efcb"
+    )
 
     # SPORT
     position = db.Column(db.String(30), nullable=True)
     number = db.Column(db.Integer, nullable=True)
-    teams = db.relationship('Team', secondary=player_team, backref='players')
+    teams = db.relationship("Team", secondary=player_team, backref="players")
 
     # DB
     created_at = db.Column(
@@ -86,7 +90,6 @@ class Player(db.Model):
         return f"<Player(first_name='{self.first_name}', last_name='{self.last_name}', sport='{self.sport}', team_name='{self.team_name}')>"
 
 
-
 class Team(db.Model):
     __tablename__ = "teams"
 
@@ -95,7 +98,9 @@ class Team(db.Model):
     # SPORT
     sport = db.Column(db.String(40), nullable=False)
     name = db.Column(db.String(40), nullable=False)
-    badge = db.Column(db.String(255), nullable=False, default='4a6d9d8630324477b3d9cd6eac485b2c')
+    badge = db.Column(
+        db.String(255), nullable=False, default="4a6d9d8630324477b3d9cd6eac485b2c"
+    )
     league_id = db.Column(db.Integer, db.ForeignKey("leagues.id"), nullable=True)
     players = relationship("Player", backref="team", lazy=True)
 
@@ -118,7 +123,9 @@ class League(db.Model):
     sport = db.Column(db.String(40), nullable=False)
     location = db.Column(db.String(40), nullable=False)
     teams = relationship("Team", backref="league", lazy=True)
-    logo = db.Column(db.String(255), nullable=False, default='dd2b0f0f465e4931b784ce9066cc5973')
+    logo = db.Column(
+        db.String(255), nullable=False, default="dd2b0f0f465e4931b784ce9066cc5973"
+    )
 
     # DB
     created_at = db.Column(
