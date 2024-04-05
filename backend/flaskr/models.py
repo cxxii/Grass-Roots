@@ -59,8 +59,8 @@ class User(db.Model):
 
 player_team = db.Table(
     "player_team",
-    db.Column("player_id", db.Integer, db.ForeignKey("player.id")),
-    db.Column("team_id", db.Interger, db.ForeignKey("team.id")),
+    db.Column("player_id", db.Integer, db.ForeignKey("players.id")),
+    db.Column("team_id", db.Integer, db.ForeignKey("teams.id")),
 )
 
 
