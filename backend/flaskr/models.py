@@ -9,12 +9,16 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
+    # CREATION
     email = db.Column(db.String(80), unique=True, nullable=False)
     _password = db.Column("password", db.String(255), nullable=False)
 
+    # PERSONAL
     first_name = db.Column(db.String(30), nullable=True)
     last_name = db.Column(db.String(30), nullable=True)
     dob = db.Column(db.Date, nullable=True)
+
+    # WEB
     is_active = db.Column(
         db.Boolean, nullable=False, default=False, server_default="false"
     )
@@ -22,10 +26,11 @@ class User(db.Model):
         db.DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)
     )
 
-    site_admin = db.Column(db.Boolean(), default=False)
-    league_admin = db.Column(db.Boolean(), default=False)
-    team_admin = db.Column(db.Boolean(), default=False)
+    # LOGIC
+    league_admin = db.Column(db.Boolean(), default=False, server_default="false")
+    team_admin = db.Column(db.Boolean(), default=False, server_default="false")
 
+    # RELATIONSHIPS
     player = db.relationship('players', backref='users', lazy=True)
 
     @hybrid_property
@@ -50,3 +55,74 @@ class User(db.Model):
     def __repr__(self):
         """Represent instance as a unique string."""
         return f"<User({self.username!r})>"
+
+
+player_team = db.Table('player_team',
+                       db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
+                       db.Column('team_id', db.Interger, db.ForeignKey('team.id')))
+
+
+class Player(db.Model):
+    __tablename__ = "players"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    # PERSONAL
+    first_name = db.Column(db.String(30), nullable=False)
+    last_name = db.Column(db.String(30), nullable=False)
+    display_pic = db.Column(db.String(255), nullable=False, default='3bc4d796a1564c70a5704ea63347efcb')
+
+    # SPORT
+    position = db.Column(db.String(30), nullable=True)
+    number = db.Column(db.Integer, nullable=True)
+    teams = db.relationship('Team', secondary=player_team, backref='players')
+
+    # WEB
+    created_at = db.Column(
+        db.DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)
+    )
+
+    def __repr__(self):
+        return f"<Player(first_name='{self.first_name}', last_name='{self.last_name}', sport='{self.sport}', team_name='{self.team_name}')>"
+
+
+
+class Team(db.Model):
+    __tablename__ = "teams"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    # SPORT
+    sport = db.Column(db.String(40), nullable=False)
+    team_name = db.Column(db.String(40), nullable=False)
+    badge = db.Column(db.String(255), nullable=False, default='3bc4d796a1564c70a5704ea63347efcb')
+    league_id = db.Column(db.Integer, db.ForeignKey("leagues.id"), nullable=True)
+    players = relationship("Player", backref="team", lazy=True)
+
+    # Web
+    created_at = db.Column(
+        db.DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)
+    )
+
+
+    def __repr__(self):
+        return f"<Team(sport='{self.sport}', team_name='{self.team_name}')>"
+
+
+class League(db.Model):
+    __tablename__ = "leagues"
+
+    id = db.Column(db.Integer, primary_key=True)
+    league_name = db.Column(db.String(100), nullable=False, unique=True)
+    league_sport = db.Column(db.String(40), nullable=False)
+    location = db.Column(db.String(40), nullable=False)
+    created_at = db.Column(
+        db.DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)
+    )
+
+    # league logo
+
+    teams = relationship("Team", backref="league", lazy=True)
+
+    def __repr__(self):
+        return f"<League(league_name='{self.league_name}', league_sport='{self.league_sport}', location='{self.location}')>"
