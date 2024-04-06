@@ -1,5 +1,6 @@
-from flask import Flask
 from extensions import db, r, bcrypt, cors
+from flask import Flask
+
 
 
 def create_app(test_config=None):
@@ -18,5 +19,9 @@ def create_app(test_config=None):
 
         # Routes
         from flaskr.routes import auth
+
+        # Register Blueprints
+        app.register_blueprint(auth.user)
+
 
         return app
