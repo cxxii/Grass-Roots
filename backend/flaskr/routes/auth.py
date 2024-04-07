@@ -1,6 +1,7 @@
 from flask import request, jsonify, make_response, current_app, Blueprint
 import email_validator
-from extensions import bcrypt, db
+from flask_mail import Message
+from extensions import bcrypt, db, mail
 from flaskr.models import User
 import jwt
 import datetime as dt
@@ -11,7 +12,8 @@ user = Blueprint("user", __name__)
 """
 * TODO
 * retoken the user if expired
-* email sender
+* forgot password
+* change password
 """
 
 
@@ -46,6 +48,8 @@ def signup():
         new_user.reg_token = token
         db.session.commit()
 
+        email_token(email, token)
+
         current_app.logger.info(f"Registration: {email} : {token}")
 
         return jsonify({"message": "User created successfully"}), 201
@@ -64,9 +68,7 @@ def confirm_email():
 
     try:
         jwt.decode(
-            user.reg_token,
-            current_app.config["SECRET_KEY"],
-            algorithms=["HS256"]
+            user.reg_token, current_app.config["SECRET_KEY"], algorithms=["HS256"]
         )
 
     except jwt.ExpiredSignatureError:
@@ -93,7 +95,6 @@ def login():
     if not user:
         return make_response("Email not found", 401)
 
-
     if not bcrypt.check_password_hash(user.password, auth.password):
         return make_response(
             "Incorrect password!",
@@ -111,13 +112,21 @@ def login():
         )
         current_app.logger.info(f"Registration: {user} : {token}")
 
-        return 'log in token for auth pages'
+        return "log in token for auth pages"
 
     else:
-        return jsonify({"message": "user not active"})
-
+        return jsonify({"message": "user not active - check email"})
 
 
 @user.route("/api/v1")
 def index():
     return "index"
+
+
+def email_token(email, token):
+    msg = Message("CONFIRM YOUR EMAIL",
+                  sender="from@example.com",
+                  recipients=[email])
+
+    msg.html = f'<p>Please confirm email by clicking the link below</p><a href="http://localhost:5000/api/v1/user/verifyEmail?email={email}&token={token}">click here</a>'
+    mail.send(msg)
