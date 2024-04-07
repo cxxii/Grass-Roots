@@ -70,7 +70,7 @@ def get_league():
 
 
 # GET ALL BY SPORT
-@league.route("/api/v1/league/<string:sport>", methods=["GET"])
+@league.route("/api/v1/league/sport/<string:sport>", methods=["GET"])
 def get_league_sport(sport):
     leagues = League.query.filter_by(sport=sport).all()
 
@@ -80,7 +80,8 @@ def get_league_sport(sport):
     return jsonify({"error": f"No {sport} leagues found"}), 404
 
 
-@league.route("/api/v1/league/<string:location>", methods=["GET"])
+# GET ALL BY LOCATION
+@league.route("/api/v1/league/location/<string:location>", methods=["GET"])
 def get_league_location(location):
     leagues = League.query.filter_by(location=location).all()
 
@@ -91,7 +92,7 @@ def get_league_location(location):
 
 
 # GET ALL BY SPORT & LOCATION
-@league.route("/api/v1/league/<string:location>/<string:sport>", methods=["GET"])
+@league.route("/api/v1/league/location/<string:location>/sport/<string:sport>", methods=["GET"])
 def get_league_sportlocation(sport, location):
     leagues = League.query.filter_by(sport=sport, location=location).all()
 
