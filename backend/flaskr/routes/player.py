@@ -16,13 +16,19 @@ def create_player():
     position = data.get("position")
     pic = data.get("pict")
     number = data.get("number")
-    user = data.get('user')
-
+    user = data.get("user")
 
     if not first:
         return jsonify({"error": "Name is required"}), 400
 
-    new_player=Player(first_name=first, last_name=last, display_pic=pic, position=position, number=number, user_id=user)
+    new_player = Player(
+        first_name=first,
+        last_name=last,
+        display_pic=pic,
+        position=position,
+        number=number,
+        user_id=user,
+    )
 
     try:
         db.session.add(new_player)

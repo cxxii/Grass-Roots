@@ -92,7 +92,9 @@ def get_league_location(location):
 
 
 # GET ALL BY SPORT & LOCATION
-@league.route("/api/v1/league/location/<string:location>/sport/<string:sport>", methods=["GET"])
+@league.route(
+    "/api/v1/league/location/<string:location>/sport/<string:sport>", methods=["GET"]
+)
 def get_league_sportlocation(sport, location):
     leagues = League.query.filter_by(sport=sport, location=location).all()
 
@@ -108,15 +110,16 @@ def get_league_id(league_id):
     league = League.query.get(league_id)
 
     if league:
-        return jsonify({
-            "id": league.id,
-            "name": league.name,
-            "sport": league.sport,
-            "location": league.location,
-            "created_at": league.created_at
-        })
+        return jsonify(
+            {
+                "id": league.id,
+                "name": league.name,
+                "sport": league.sport,
+                "location": league.location,
+                "created_at": league.created_at,
+            }
+        )
     else:
-
         return jsonify({"error": f"No league found with ID {league_id}"}), 404
 
 
@@ -148,7 +151,6 @@ def update_league(league_id):
 
 
 def league_data_dict(leagues):
-
     league_data = [
         {
             "id": league.id,

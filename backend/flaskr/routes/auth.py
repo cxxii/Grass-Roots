@@ -124,9 +124,7 @@ def index():
 
 
 def email_token(email, token):
-    msg = Message("CONFIRM YOUR EMAIL",
-                  sender="from@example.com",
-                  recipients=[email])
+    msg = Message("CONFIRM YOUR EMAIL", sender="from@example.com", recipients=[email])
 
     msg.html = f'<p>Please confirm email by clicking the link below</p><a href="http://localhost:5000/api/v1/user/verifyEmail?email={email}&token={token}">click here</a>'
     mail.send(msg)

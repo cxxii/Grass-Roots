@@ -13,7 +13,7 @@ class User(db.Model):
 
     # CREATION
     email = db.Column(db.String(80), unique=True, nullable=False)
-    _password = db.Column("password", db.String(255), nullable=False)
+    _password = db.Column("password", db.LargeBinary, nullable=False)
 
     # PERSONAL
     first_name = db.Column(db.String(30), nullable=True)
@@ -57,7 +57,7 @@ class User(db.Model):
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return f"<User({self.username!r})>"
+        return f"<User({self.id!r})>"
 
 
 player_team = db.Table(
@@ -73,8 +73,8 @@ class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     # PERSONAL
-    first_name = db.Column(db.String(30), nullable=False)
-    last_name = db.Column(db.String(30), nullable=False)
+    first_name = db.Column(db.String(30), nullable=True)
+    last_name = db.Column(db.String(30), nullable=True)
     display_pic = db.Column(
         db.String(255), nullable=False, default="3bc4d796a1564c70a5704ea63347efcb"
     )
@@ -102,17 +102,13 @@ class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     # SPORT
-    sport = db.Column(db.String(40), nullable=False)
     name = db.Column(db.String(40), nullable=False)
     badge = db.Column(
         db.String(255), nullable=False, default="4a6d9d8630324477b3d9cd6eac485b2c"
     )
     league_id = db.Column(db.Integer, db.ForeignKey("leagues.id"), nullable=True)
-
-    # M2M
     player_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
-    #  foreign_keys=[player_id] below
     players = relationship(
         "Player", secondary=player_team, backref="teams_of", lazy=True
     )

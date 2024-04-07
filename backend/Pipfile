@@ -18,6 +18,8 @@ flask-wtf = "*"
 flask-migrate = "*"
 pyjwt = "*"
 flask-redis = "*"
+email-validator = "*"
+flask-mail = "*"
 
 [dev-packages]
 
