@@ -1,9 +1,10 @@
-from flask import request, jsonify, make_response, current_app, Blueprint
+from flask import request, jsonify, make_response, current_app, Blueprint, Response
 import email_validator
 from flask_mail import Message
 from extensions import bcrypt, db, mail
 from flaskr.models import User
 import jwt
+from flask_cors import CORS
 import datetime as dt
 from datetime import timezone
 
@@ -16,9 +17,12 @@ user = Blueprint("user", __name__)
 * change password
 """
 
+CORS(user, supports_credentials=True)
+
 
 @user.route("/api/v1/signup", methods=["POST"])
 def signup():
+
     data = request.json
 
     email = data.get("email")
@@ -128,3 +132,10 @@ def email_token(email, token):
 
     msg.html = f'<p>Please confirm email by clicking the link below</p><a href="http://localhost:5000/api/v1/user/verifyEmail?email={email}&token={token}">click here</a>'
     mail.send(msg)
+
+@user.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        res = Response()
+        res.headers['X-Content-Type-Options'] = '["http://127.0.0.1:3000", "http://localhost:3000/"]'
+        return res

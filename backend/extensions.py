@@ -8,6 +8,7 @@ from flask_static_digest import FlaskStaticDigest
 from flask_wtf.csrf import CSRFProtect
 from flask_redis import FlaskRedis
 from flask_cors import CORS
+from flask_cors import cross_origin
 from flask_mail import Mail
 
 bcrypt = Bcrypt()

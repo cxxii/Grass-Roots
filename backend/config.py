@@ -26,3 +26,7 @@ class Config:
     MAIL_PORT = 1025
     MAIL_USE_TLS = False
     MAIL_USE_SSL = False
+
+    CORS_HEADERS = "Content-Type, Authorization, Origin, x-csrf-token"
+    CORS_METHODS = "GET, HEAD, POST, PATCH, DELETE, OPTIONS"
+    CORS_ORIGINS = ["http://127.0.0.1:3000", "http://localhost:3000/"]

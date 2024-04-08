@@ -8,9 +8,9 @@ def create_app(test_config=None):
     app.config.from_object("config.Config")
 
     # Initialize Extensions
+    cors.init_app(app)
     db.init_app(app)
     r.init_app(app)
-    cors.init_app(app)
     bcrypt.init_app(app)
     mail.init_app(app)
 

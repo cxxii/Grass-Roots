@@ -1,5 +1,6 @@
 from flask import request, jsonify, Blueprint
 from extensions import db
+from flask_cors import cross_origin
 from flaskr.models import Team, League
 
 
