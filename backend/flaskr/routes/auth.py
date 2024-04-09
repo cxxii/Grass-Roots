@@ -4,7 +4,7 @@ from flask_mail import Message
 from extensions import bcrypt, db, mail
 from flaskr.models import User
 import jwt
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import datetime as dt
 from datetime import timezone
 
@@ -19,7 +19,7 @@ user = Blueprint("user", __name__)
 
 CORS(user, supports_credentials=True)
 
-
+@cross_origin()
 @user.route("/api/v1/signup", methods=["POST"])
 def signup():
 
